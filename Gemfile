@@ -13,7 +13,7 @@ gem "bootsnap", require: false
 gem "rack-cors"
 
 group :development, :test do
-  gem 'factory_girl_rails'
+  gem 'dotenv-rails'
   gem 'guard-rspec'
   gem 'pry-byebug'
   gem 'rspec-rails'
