@@ -1,19 +1,35 @@
 version: '3'
 
 services:
-  app:
+  api:
     build: 
       context: .
     image: rafaelps1/brq-app
-    container_name: app
+    container_name: api
     tty: true
     ports:
       - "3000:3000"
     volumes:
       - ./:/usr/src/app
     networks:
-      - bqrnet
+      - bqr-net
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0.33
+    command: --innodb-use-native-aio=0
+    container_name: db
+    restart: always
+    tty: true
+    volumes:
+      - ./.docker/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=nodedb
+    networks:
+      - bqr-net
 
 networks:
-  bqrnet:
+  bqr-net:
     driver: bridge

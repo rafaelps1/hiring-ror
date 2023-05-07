@@ -3,21 +3,21 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.0.6"
 
-gem "sqlite3", "~> 1.4"
-
-gem "rails", "~> 7.0.4", ">= 7.0.4.3"
-gem "puma", "~> 5.0"
-gem "jbuilder"
-gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
-gem "bootsnap", require: false
-gem "rack-cors"
+gem 'rails', '~> 7.0.4', '>= 7.0.4.3'
+gem 'puma', '~> 5.0'
+gem 'jbuilder'
+gem 'mysql2'
+gem 'tzinfo-data', platforms: %i[ mingw mswin x64_mingw jruby ]
+gem 'bootsnap', require: false
+gem 'rack-cors'
 
 group :development, :test do
   gem 'dotenv-rails'
+  gem 'factory_bot_rails'
   gem 'guard-rspec'
   gem 'pry-byebug'
   gem 'rspec-rails'
-  gem "debug", platforms: %i[ mri mingw x64_mingw ]
+  gem 'debug', platforms: %i[ mri mingw x64_mingw ]
 end
 
 group :development do
