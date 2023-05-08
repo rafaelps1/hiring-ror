@@ -20,6 +20,7 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'pry-byebug'
   gem 'rspec-rails'
+  gem 'shoulda-matchers', '~> 5.3'
   gem 'debug', platforms: %i[ mri mingw x64_mingw ]
 end
 
@@ -33,5 +34,3 @@ group :rubocop do
   gem 'rubocop-rails',       require: false
   gem 'rubocop-rspec',       require: false
 end
-
-gem "shoulda-matchers", "~> 5.3"

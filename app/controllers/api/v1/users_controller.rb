@@ -1,5 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   before_action :set_user, only: %i[show destroy]
+  before_action :check_owner, only: %i[destroy]
 
   # GET /users/1
   def show
@@ -29,5 +30,9 @@ class Api::V1::UsersController < ApplicationController
 
   def set_user
     @user = User.find_by_id(params[:id])
+  end
+
+  def check_owner
+    head :forbidden unless @user.id == current_user&.id
   end
 end

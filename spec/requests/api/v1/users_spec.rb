@@ -23,8 +23,18 @@ RSpec.describe 'Api::V1::Users', type: :request do
       get "/api/v1/users/#{@user.id}"
     end
 
+    let(:headers) { {Authorization: JsonWebToken.encode(user_id: @user.id)} }
+
     it 'delete user' do
-      delete "/api/v1/users/#{@user.id}"
+      delete("/api/v1/users/#{@user.id}", headers: headers)
+      expect(response).to have_http_status(:no_content)
+
+      get "/api/v1/users/#{@user.id}"
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it 'with auth to delete user' do
+      delete("/api/v1/users/#{@user.id}", headers: headers)
       expect(response).to have_http_status(:no_content)
 
       get "/api/v1/users/#{@user.id}"
