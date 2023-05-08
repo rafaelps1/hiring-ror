@@ -1,7 +1,7 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.0.6"
+ruby '3.0.6'
 
 gem 'rails', '~> 7.0.4', '>= 7.0.4.3'
 gem 'puma', '~> 5.0'
@@ -11,6 +11,7 @@ gem 'tzinfo-data', platforms: %i[ mingw mswin x64_mingw jruby ]
 gem 'bootsnap', require: false
 gem 'rack-cors'
 gem 'bcrypt', '~> 3.1.7'
+gem 'jwt', '~> 2.7'
 
 group :development, :test do
   gem 'dotenv'
@@ -32,3 +33,5 @@ group :rubocop do
   gem 'rubocop-rails',       require: false
   gem 'rubocop-rspec',       require: false
 end
+
+gem "shoulda-matchers", "~> 5.3"
