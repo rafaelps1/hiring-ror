@@ -10,8 +10,10 @@ gem 'mysql2'
 gem 'tzinfo-data', platforms: %i[ mingw mswin x64_mingw jruby ]
 gem 'bootsnap', require: false
 gem 'rack-cors'
+gem 'bcrypt', '~> 3.1.7'
 
 group :development, :test do
+  gem 'dotenv'
   gem 'dotenv-rails'
   gem 'factory_bot_rails'
   gem 'guard-rspec'
