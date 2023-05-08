@@ -10,7 +10,7 @@ WORKDIR ${APP_DIR}
 
 RUN gem install rails
 
-COPY Gemfile Gemfile.lock ./
+COPY Gemfile ./
 
 RUN (bundle check || bundle install)
 
