@@ -32,7 +32,7 @@ RSpec.describe 'Api::V1::Products', type: :request do
 
   describe 'GET /index' do
     let(:user) { build(:user_pwd_bcrypt) }
-    let(:product) { create(:product) }
+    let(:product) { create(:product, name: 'test') }
 
     context 'show one product' do
       before do
@@ -40,14 +40,35 @@ RSpec.describe 'Api::V1::Products', type: :request do
         @json_response = JSON.parse(response.body)
       end
   
-      it 'list product' do
+      it 'should list product' do
         expect(response).to have_http_status(:success)
-        expect(product.name).to eq(@json_response.first['name'])
+        product_name = @json_response['products']&.first['name']
+        expect(product.name).to eq(product_name)
       end
     end
+    
+    context 'fetch products by name or term his' do
+      let!(:car_product) { create(:product, name: 'Carro', user: user) }
+      let!(:computer_product) { create(:product, name: 'Computador', user: user) }
+      let!(:pliers_product) { create(:product, name: 'Alicate', user: user) }
 
-    context 'show many products in the list' do
-      xit 'products with pagenation' do
+      before do
+        5.times do
+          create(:product, name: Faker::Name.unique.name, user: user)
+        end
+        get api_v1_products_url(product), params: { term: 'ca' }
+        @json_response = JSON.parse(response.body)
+      end
+  
+      it 'list products' do
+        expect(response).to have_http_status(:success)
+        expect(@json_response["products"].size).to eq(2)
+      end
+
+      it 'list products on page 2' do
+        get api_v1_products_url(product), params: { page: 2 }
+        @json_response = JSON.parse(response.body)
+        expect(@json_response['pagination']['vars']['page']).to eq('2')
       end
     end
   end

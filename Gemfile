@@ -12,6 +12,7 @@ gem 'bootsnap', require: false
 gem 'rack-cors'
 gem 'bcrypt', '~> 3.1.7'
 gem 'jwt', '~> 2.7'
+gem 'pagy', '~> 6.0'
 
 group :development, :test do
   gem 'dotenv'

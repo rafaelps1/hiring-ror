@@ -1,4 +1,5 @@
 class Api::V1::ProductsController < ApplicationController
+  before_action :set_filter_params, only: :index
   before_action :set_product, only: %i[update inactive]
   before_action :check_login, only: :create
 
@@ -8,7 +9,13 @@ class Api::V1::ProductsController < ApplicationController
     # And add repository in the service too.
     # So, it improvements design (software) and help code maintainable
 
-    render json: Product.all
+    page      = params[:page] || 1
+    term      = params[:term]
+    filtered  = Product.active
+    filtered  = filtered.filter_by_name(term) if term.present?
+
+    @pagy, @products = pagy(filtered.order(:created_at), page: page)
+    render json: { products: @products, pagination: @pagy }
   end
 
   # POST /products
@@ -43,6 +50,10 @@ class Api::V1::ProductsController < ApplicationController
 
   def product_params
     params.require(:product).permit(:name, :title, :price, :photo, :state)
+  end
+
+  def set_filter_params
+    params.permit(:term, :page)
   end
 
   def set_product

@@ -6,6 +6,9 @@ class Product < ApplicationRecord
 
   belongs_to :user
 
+  scope :active, -> { where(state: true) }
+  scope :filter_by_name, ->(term) { where('lower(name) LIKE ?', "%#{term.downcase}%") }
+
   private
 
   def price_is_valid_decimal_precision
