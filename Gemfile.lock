@@ -77,9 +77,6 @@ GEM
     concurrent-ruby (1.2.2)
     crass (1.0.6)
     date (3.3.3)
-    debug (1.7.2)
-      irb (>= 1.5.0)
-      reline (>= 0.3.1)
     diff-lcs (1.5.0)
     dotenv (2.8.1)
     dotenv-rails (2.8.1)
@@ -113,9 +110,6 @@ GEM
       rspec (>= 2.99.0, < 4.0)
     i18n (1.13.0)
       concurrent-ruby (~> 1.0)
-    io-console (0.6.0)
-    irb (1.6.4)
-      reline (>= 0.3.0)
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
@@ -204,8 +198,6 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     regexp_parser (2.8.0)
-    reline (0.3.3)
-      io-console (~> 0.5)
     rexml (3.2.5)
     rspec (3.12.0)
       rspec-core (~> 3.12.0)
@@ -276,7 +268,6 @@ DEPENDENCIES
   bcrypt (~> 3.1.7)
   bootsnap
   brakeman
-  debug
   dotenv
   dotenv-rails
   factory_bot_rails

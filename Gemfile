@@ -22,7 +22,6 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'rspec-rails'
   gem 'shoulda-matchers', '~> 5.3'
-  gem 'debug', platforms: %i[ mri mingw x64_mingw ]
 end
 
 group :development do
