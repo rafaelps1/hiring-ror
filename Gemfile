@@ -17,6 +17,7 @@ group :development, :test do
   gem 'dotenv'
   gem 'dotenv-rails'
   gem 'factory_bot_rails'
+  gem 'faker', '~> 3.2'
   gem 'guard-rspec'
   gem 'pry-byebug'
   gem 'rspec-rails'

@@ -16,4 +16,17 @@ RSpec.describe User, type: :model do
       expect(user_invalid.errors.messages.values).to include(["is invalid"])
     end
   end
+
+  describe 'Associations' do
+    let(:user) { build(:user) }
+    let!(:product1) { create(:product, user: user) }
+    let!(:product2) { create(:product, name: 'Table', user: user) }
+
+    it 'delete user should destroy linked product' do
+      expect(Product.all.count).to eq(2)
+
+      user.destroy
+      expect(Product.all.count).to eq(0)
+    end
+  end
 end
