@@ -3,7 +3,9 @@ class Product < ApplicationRecord
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validate :price, :price_is_valid_decimal_precision
   validates :photo, presence: true,
-                    format: { with: %r{\A(http|https)://|[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,6}(:[0-9]{1,5})?(/.*)?\z} }
+                    format: {
+                      with: %r{\A(http|https)://|[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,6}(:[0-9]{1,5})?(/.*)?\z}
+                    }
 
   belongs_to :user
 
