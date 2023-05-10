@@ -24,7 +24,7 @@ RSpec.describe 'Api::V1::Products', type: :request do
       expect(response).to have_http_status(:created)
     end
 
-    it 'should forbid create product' do
+    it 'should forbidden create product' do
       post(api_v1_products_url, params: valids_params)
       expect(response).to have_http_status(:forbidden)
     end
