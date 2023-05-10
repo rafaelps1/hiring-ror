@@ -4,10 +4,10 @@ RSpec.describe 'Api::V1::Products', type: :request do
   describe 'POST /create' do
     let!(:user) { create(:user_pwd_bcrypt) }
     let(:product) { build(:product) }
-    let(:headers) {
+    let(:headers) do
       { Authorization: JsonWebToken.encode(user_id: user.id) }
-    }
-    let(:valids_params) {
+    end
+    let(:valids_params) do
       {
         product: {
           name: product.name,
@@ -17,7 +17,7 @@ RSpec.describe 'Api::V1::Products', type: :request do
           state: product.state
         }
       }
-    }
+    end
 
     it 'should create product' do
       post(api_v1_products_url, params: valids_params, headers: headers)
@@ -39,14 +39,14 @@ RSpec.describe 'Api::V1::Products', type: :request do
         get api_v1_products_url(product)
         @json_response = JSON.parse(response.body)
       end
-  
+
       it 'should list product' do
         expect(response).to have_http_status(:success)
-        product_name = @json_response['products']&.first['name']
+        product_name = @json_response['products']&.first&.[]('name')
         expect(product.name).to eq(product_name)
       end
     end
-    
+
     context 'fetch products by name or term his' do
       let!(:car_product) { create(:product, name: 'Carro', user: user) }
       let!(:computer_product) { create(:product, name: 'Computador', user: user) }
@@ -59,10 +59,10 @@ RSpec.describe 'Api::V1::Products', type: :request do
         get api_v1_products_url(product), params: { term: 'ca' }
         @json_response = JSON.parse(response.body)
       end
-  
+
       it 'list products' do
         expect(response).to have_http_status(:success)
-        expect(@json_response["products"].size).to eq(2)
+        expect(@json_response['products'].size).to eq(2)
       end
 
       it 'list products on page 2' do
@@ -76,9 +76,9 @@ RSpec.describe 'Api::V1::Products', type: :request do
   describe 'PUT /product/inactive' do
     let!(:user) { create(:user_pwd_bcrypt) }
     let!(:product) { create(:product, user: user) }
-    let(:headers) {
+    let(:headers) do
       { Authorization: JsonWebToken.encode(user_id: user.id) }
-    }
+    end
 
     it 'should inactive product' do
       put(api_v1_product_inactive_url(product))

@@ -11,7 +11,7 @@ class MockController
 end
 
 RSpec.describe Authenticable do
-  describe "#current_user" do
+  describe '#current_user' do
     before do
       @user = create(:user_pwd_bcrypt)
       @auth_controller = MockController.new

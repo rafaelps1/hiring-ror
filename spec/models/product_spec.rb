@@ -19,7 +19,7 @@ RSpec.describe Product, type: :model do
       product1.name = Faker::Lorem.characters(number: 101)
       expect(product1.save).to be false
     end
-    
+
     it 'price have two digits after decimal point' do
       product1.price = 99.929
       expect(product1.save).to be false
