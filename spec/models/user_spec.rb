@@ -13,7 +13,7 @@ RSpec.describe User, type: :model do
 
     it 'user invalid' do
       expect(user_invalid.valid?).to be false
-      expect(user_invalid.errors.messages.values).to include(["is invalid"])
+      expect(user_invalid.errors.messages.values).to include(['is invalid'])
     end
   end
 

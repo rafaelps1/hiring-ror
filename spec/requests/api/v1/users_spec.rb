@@ -23,8 +23,8 @@ RSpec.describe 'Api::V1::Users', type: :request do
       get "/api/v1/users/#{@user.id}"
     end
 
-    let(:headers) {{ Authorization: JsonWebToken.encode(user_id: @user.id) }}
-    let(:headers_invalid_signature) {{ Authorization: JWT.encode({ user_id: @user.id }, 'bad_signature')}}
+    let(:headers) { { Authorization: JsonWebToken.encode(user_id: @user.id) } }
+    let(:headers_invalid_signature) { { Authorization: JWT.encode({ user_id: @user.id }, 'bad_signature') } }
 
     it 'delete user' do
       delete("/api/v1/users/#{@user.id}", headers: headers)
