@@ -1,7 +1,9 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-
+Product.delete_all
 User.delete_all
-user = User.create! email: 'admin@admin.com', password: 'admin123'
+
+user = User.create! email: 'admin@admin.com', password: 'admin'
 puts "Created a new user: #{user.email}"
+
+15.times do
+  FactoryBot.create(:product, name: Faker::Name.unique.name, user: user)
+end

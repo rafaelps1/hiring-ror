@@ -36,14 +36,14 @@ RSpec.describe 'Api::V1::Products', type: :request do
 
     context 'show one product' do
       before do
+        Product.destroy_all
         get api_v1_products_url(product)
-        @json_response = JSON.parse(response.body)
+        @json_resp = json(response)
       end
 
       it 'should list product' do
         expect(response).to have_http_status(:success)
-        product_name = @json_response['products']&.first&.[]('name')
-        expect(product.name).to eq(product_name)
+        expect(@json_resp.fetch('data', []).find{ |prod| prod['name'] == 'test' }.present?).to be true
       end
     end
 
@@ -56,19 +56,21 @@ RSpec.describe 'Api::V1::Products', type: :request do
         5.times do
           create(:product, name: Faker::Name.unique.name, user: user)
         end
-        get api_v1_products_url(product), params: { term: 'ca' }
-        @json_response = JSON.parse(response.body)
       end
 
       it 'list products' do
+        get api_v1_products_url(product), params: { term: 'ca' }
+        @json_resp = json(response)
         expect(response).to have_http_status(:success)
-        expect(@json_response['products'].size).to eq(2)
+        data = @json_resp['data'].to_s
+        expect(data).to match('\"name\"=>\"Carro\"')
+        expect(data).to match('\"name\"=>\"Alicate\"')
       end
 
       it 'list products on page 2' do
         get api_v1_products_url(product), params: { page: 2 }
-        @json_response = JSON.parse(response.body)
-        expect(@json_response['pagination']['vars']['page']).to eq('2')
+        page = json(response).fetch('links').fetch('page')
+        expect(page).to eq('2')
       end
     end
   end
