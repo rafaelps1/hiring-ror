@@ -6,7 +6,8 @@ services:
       context: .
     image: rafaelps1/brq-app
     container_name: api
-    entrypoint: 'rails server -b 0.0.0.0 -p 3000'
+    entrypoint: '/bin/sh -c "while sleep 1000; do :; done"'
+    command: 'rm -rf tmp -R'
     tty: true
     ports:
       - "3000:3000"
