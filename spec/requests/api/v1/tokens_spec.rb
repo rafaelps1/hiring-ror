@@ -5,7 +5,7 @@ RSpec.describe 'Api::V1::Tokens', type: :request do
     let(:user) { create(:user_pwd_bcrypt) }
     let(:user_auth_params) do
       {
-        user: {
+        token: {
           email: user.email,
           password: 'pwd@g00d$'
         }
@@ -13,7 +13,7 @@ RSpec.describe 'Api::V1::Tokens', type: :request do
     end
     let(:user_unauth_params) do
       {
-        user: {
+        token: {
           email: user.email,
           password: '12356'
         }
@@ -22,15 +22,16 @@ RSpec.describe 'Api::V1::Tokens', type: :request do
 
     context 'JWT tokens' do
       it 'should get token' do
-        post('/api/v1/tokens', params: user_auth_params)
-        @json_response = JSON.parse(response.body)
+        post api_v1_tokens_url, params: user_auth_params
+        data = json(response).fetch('data')
 
         expect(response).to have_http_status(:success)
-        expect(@json_response['token']).to_not eq(nil)
+        expect(data.fetch('token')).to_not eq(nil)
+        expect(data.fetch('email')).to eq(user.email)
       end
 
       it 'should not get token' do
-        post('/api/v1/tokens', params: user_unauth_params)
+        post api_v1_tokens_url, params: user_unauth_params
         expect(response).to have_http_status(:unauthorized)
       end
     end
