@@ -1,9 +1,11 @@
-BRQ Hiring API REST
+Hiring API REST
 ===
 
-This API was created by way approach to ORM-driven solution, which is a straightforward solution that provide by framework Ruby on Rails.
+The Hiring API was built using an ORM and MVC pattern based approach, which is a straightforward solution provided by various frameworks such as Ruby on Rails.
 
-For improvements in project design, we'll need to decouple the entity and behavior of the Acticverecord in the future. The DDD approach can be a good way to do it.
+However, we can improve Hiring's design to make it more robust, flexible, and scalable. For that, we must decouple the domain entities and their behaviors from the ORM (Activeverecord). Thus, we will isolate the business layer from the data layer using the Repository pattern, we will add some Services that will define the entity behaviors, we will also use the Factory pattern to help in the creation of families of related or dependent objects if that is the case.
+
+In the future, we will apply DDD principles along with Clear Architecture to gain even more flexibility and scalability in this API.
 
 # Features
 
