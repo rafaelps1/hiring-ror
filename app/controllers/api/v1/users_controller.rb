@@ -14,9 +14,10 @@ module Api
       # POST /users
       def create
         @user = User.new(user_params)
-        render json: user, status: :created and return if user.save
+        render status: :created and return if @user.save
 
-        render json: user.errors, status: :unprocessable_entity
+        @errors = @user.errors.errors
+        render status: :unprocessable_entity
       end
 
       # DELETE /users/:id
