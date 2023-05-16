@@ -1,7 +1,6 @@
 module Api
   module V1
     class ProductsController < ApplicationController
-      # before_action :set_filter_params, only: :index
       before_action :set_product, only: %i[update inactive]
       before_action :check_login, only: :create
 
@@ -52,10 +51,6 @@ module Api
       def product_params
         params.require(:product).permit(:name, :title, :price, :photo, :state)
       end
-
-      # def set_filter_params
-      #   params.require(:product).permit(:term, :page)
-      # end
 
       def set_product
         @product = Product.find_by_id(params[:id])
