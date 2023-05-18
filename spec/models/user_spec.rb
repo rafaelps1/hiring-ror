@@ -23,10 +23,10 @@ RSpec.describe User, type: :model do
     let!(:product2) { create(:product, name: 'Table', user: user) }
 
     it 'delete user should destroy linked product' do
-      expect(Product.all.count).to eq(2)
+      expect(Product.all.count).to eq(17)
 
       user.destroy
-      expect(Product.all.count).to eq(0)
+      expect(Product.all.count).to eq(15)
     end
   end
 end

@@ -4,22 +4,23 @@ module Api
       before_action :set_user, only: %i[show destroy]
       before_action :check_owner, only: %i[destroy]
 
-      # GET /users/1
+      # GET /users/:id
       def show
-        render json: @user and return if @user.present?
+        return @user if @user.present?
 
-        render json: { message: 'Not found' }, status: :not_found
+        head :not_found
       end
 
       # POST /users
       def create
-        user = User.new(user_params)
-        render json: user, status: :created and return if user.save
+        @user = User.new(user_params)
+        render status: :created and return if @user.save
 
-        render json: user.errors, status: :unprocessable_entity
+        @errors = @user.errors.errors
+        render status: :unprocessable_entity
       end
 
-      # DELETE /users/1
+      # DELETE /users/:id
       def destroy
         @user.destroy
         head 204
