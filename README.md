@@ -20,25 +20,19 @@ Descriptions...
 $ bundle install
 ```
 
-**Update the database with new data model**:
+**Setup database**:
 
 ```console
-$ rake db:migrate
+$ rails db:setup
 ```
 
-**Create database**:
+**Start the web server on `http://localhost:3000`**:
 
 ```console
-$ rake db:seed
+$ rails s -b 0.0.0.0 -p 3000
 ```
 
-**Start the web server on `http://localhost:3000` by default**:
-
-```console
-$ rails server
-```
-
-**Run all RSpec tests**:
+**Run all RSpec**:
 
 ```console
 $ bundle exec rspec
@@ -54,21 +48,22 @@ $ bundle exec rspec
 $ docker compose up -d --build
 ```
 
-**Create database**:
+**Setup database**:
 
 ```console
-$ docker exec api rails db:create
+$ docker exec api rails db:setup
 ```
 
-**Run migrate**:
-```console
-$ docker exec api rake db:migrate
-```
-
-**Run all RSpec tests**:
+**Run all RSpec**:
 
 ```console
 $ docker exec api bundle exec rspec
+```
+
+**Start the web server on `http://localhost:3000` by default**:
+
+```console
+$ docker exec -it api rails s -b 0.0.0.0 -p 3000
 ```
 
 You can now try your REST service on link http://localhost:3000!
