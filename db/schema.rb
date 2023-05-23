@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_230_508_220_418) do
+ActiveRecord::Schema[7.0].define(version: 20_230_522_224_719) do
   create_table 'products', charset: 'utf8mb3', force: :cascade do |t|
     t.string 'name', limit: 100, null: false
     t.string 'title'
@@ -29,6 +29,7 @@ ActiveRecord::Schema[7.0].define(version: 20_230_508_220_418) do
     t.string 'password_digest', null: false
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
+    t.string 'name'
     t.index ['email'], name: 'index_users_on_email', unique: true
   end
 
