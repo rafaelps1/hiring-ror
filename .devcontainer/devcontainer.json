@@ -35,7 +35,8 @@
 		"vscode": {
 			"extensions": [
 				"misogi.ruby-rubocop",
-				"fnando.ruby"
+				"fnando.ruby",
+				"mhutchie.git-graph"
 			]
 		}
 	},

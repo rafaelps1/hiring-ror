@@ -2,11 +2,12 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   describe 'Validations' do
-    let(:user_valid) { build(:user) }
+    let(:user_valid) { build(:user, name: 'Myname') }
     let(:user_invalid) { build(:user, email: 'test') }
     let(:pwd) { BCrypt::Password.create('pwd@g00d$') }
 
     it 'user valid' do
+      expect(user_valid.name).to eq('Myname')
       expect(user_valid.email).to eq('test@test.com')
       expect(user_valid.password_digest).to eq('has_password')
     end
