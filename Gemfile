@@ -5,6 +5,10 @@ ruby '3.0.6'
 
 gem 'bcrypt', '~> 3.1.7'
 gem 'bootsnap', require: false
+gem 'dry-schema', '~> 1.13.1'
+gem 'dry-struct', '~> 1.6.0'
+gem 'dry-types', '~> 1.7.1'
+gem 'dry-validation', '~> 1.10.0'
 gem 'jbuilder', '~> 2.11.5'
 gem 'jwt', '~> 2.7'
 gem 'mysql2', '~> 0.5.5'
@@ -28,6 +32,7 @@ group :development, :test do
   gem 'rubocop-rails', '~> 2.19.1', require: false
   gem 'rubocop-rspec', '~> 2.22.0', require: false
   gem 'shoulda-matchers', '~> 5.3'
+  gem 'solargraph'
 end
 
 group :development do
