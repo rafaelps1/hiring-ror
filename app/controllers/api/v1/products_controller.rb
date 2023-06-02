@@ -6,10 +6,6 @@ module Api
 
       # GET /products
       def index
-        # TODO: add this code block on products service.
-        # And add repository in the service too.
-        # So, it improvements design (software) and help code maintainable
-
         page      = params[:page] || 1
         term      = params[:term]
         filtered  = Product.active

@@ -43,7 +43,7 @@ RSpec.describe 'Api::V1::Products', type: :request do
 
       it 'should list product' do
         expect(response).to have_http_status(:success)
-        expect(@json_resp.fetch('data', []).find{ |prod| prod['name'] == 'test' }.present?).to be true
+        expect(@json_resp.fetch('data', []).find { |prod| prod['name'] == 'test' }.present?).to be true
       end
     end
 
@@ -69,8 +69,8 @@ RSpec.describe 'Api::V1::Products', type: :request do
 
       it 'list products on page 2' do
         get api_v1_products_url(product), params: { page: 2 }
-        page = json(response).fetch('links').fetch('page')
-        expect(page).to eq('2')
+        page = json(response).fetch('links').fetch('rel')
+        expect(page).to eq('current page: 2')
       end
     end
   end

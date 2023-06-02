@@ -7,14 +7,13 @@ json.data @products do |product|
   json.state product.state
 end
 
-if @pagy.present?
+if @pages.present?
+  current_page = (@pages.prev || 0) + 1
   json.set! :links do
-    json.href '/products?page=1'
-    json.rel 'pagination'
-    json.page (@pagy.page || '').to_s
-    json.first @pagy.count&.negative? ? '0' : '1'
-    json.last (@pagy.last || '').to_s
-    json.prev (@pagy.prev || '').to_s
-    json.next (@pagy.next || '').to_s
+    json.rel "current page: #{current_page}"
+    json.first api_v1_products_url(page: 1)
+    json.last api_v1_products_url(page: @pages.last)
+    json.prev api_v1_products_url(page: @pages.prev)
+    json.next api_v1_products_url(page: @pages.next)
   end
 end
