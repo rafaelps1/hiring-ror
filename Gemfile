@@ -26,6 +26,7 @@ group :development, :test do
   gem 'faker', '~> 3.2'
   gem 'guard-rspec', '~> 4.7.3'
   gem 'pry-byebug', '~> 3.10.1'
+  gem 'reek', '~> 6.1.4'
   gem 'rspec-rails', '~> 6.0.2'
   gem 'rubocop', '~> 1.50.2', require: false
   gem 'rubocop-performance', '~> 1.17.1', require: false

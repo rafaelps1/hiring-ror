@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :product do
+  factory :product_record do
     name { Faker::Lorem.characters(number: 99) }
     title { 'Product A' }
     price { 99.92 }

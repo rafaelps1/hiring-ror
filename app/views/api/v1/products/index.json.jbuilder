@@ -1,10 +1,12 @@
-json.data @products do |product|
-  json.id product.id
-  json.name product.name
-  json.title product.title
-  json.price product.price
-  json.photo product.photo
-  json.state product.state
+if @products.any?
+  json.data @products do |product|
+    json.id product.id
+    json.name product.name
+    json.title product.title
+    json.price product.price
+    json.photo product.photo
+    json.state product.state
+  end
 end
 
 if @pages.present?

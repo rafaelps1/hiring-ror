@@ -7,5 +7,5 @@ class User < ApplicationRecord
 
   has_secure_password
 
-  has_many :products, dependent: :destroy
+  has_many :products, class_name: 'ProductRecord', dependent: :destroy
 end

@@ -1,25 +1,20 @@
 module Api
   module V1
     class ProductsController < ApplicationController
-      before_action :set_product, only: %i[update inactive]
       before_action :check_login, only: :create
 
       # GET /products
+      # GET /products?page=2&name=Ca
       def index
-        page      = params[:page] || 1
-        term      = params[:term]
-        filtered  = Product.active
-        filtered  = filtered.filter_by_name(term) if term.present?
+        @products = repository.index(params) || []
+        @pages = repository.pages
+        @errors = repository.errors
 
-        @pagy, @products = pagy(filtered.order(:created_at), page: page)
+        render json: { errors: @errors.message }, status: :bad_request if @errors.present?
       end
 
       # POST /products
       def create
-        # TODO: add this code block on products service.
-        # And add repository in the service too.
-        # So, it improvements design (software) and help code maintainable
-
         product = current_user.products.build(product_params)
         if product.save
           render json: product, status: :created
@@ -30,16 +25,9 @@ module Api
 
       # PATCH /products/:id
       def inactive
-        # TODO: add this code block on products service.
-        # And add repository in the service too.
-        # So, it improvements design (software) and help code maintainable
+        render json: {} and return if repository.inactive(params[:id])
 
-        if @product.state
-          @product.update(state: false)
-          render json: @product and return
-        end
-
-        render json: { error: 'Product already inactive.' }, status: :unprocessable_entity
+        render json: { errors: I18n.t('errors.product.already_inactive') }, status: :unprocessable_entity
       end
 
       private
@@ -48,8 +36,8 @@ module Api
         params.require(:product).permit(:name, :title, :price, :photo, :state)
       end
 
-      def set_product
-        @product = Product.find_by_id(params[:id])
+      def repository
+        @repository ||= ProductRepository.new(model: Entity::Product, record: ProductRecord)
       end
     end
   end

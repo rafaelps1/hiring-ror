@@ -20,14 +20,14 @@ RSpec.describe User, type: :model do
 
   describe 'Associations' do
     let(:user) { build(:user) }
-    let!(:product1) { create(:product, user: user) }
-    let!(:product2) { create(:product, name: 'Table', user: user) }
+    let!(:product1) { create(:product_record, user: user) }
+    let!(:product2) { create(:product_record, name: 'Table', user: user) }
 
     it 'delete user should destroy linked product' do
-      expect(Product.all.count).to eq(17)
+      expect(ProductRecord.all.count).to eq(17)
 
       user.destroy
-      expect(Product.all.count).to eq(15)
+      expect(ProductRecord.all.count).to eq(15)
     end
   end
 end

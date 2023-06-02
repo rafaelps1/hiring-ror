@@ -1,4 +1,7 @@
 en:
+  errors:
+    product:
+      already_inactive: 'Already inactive product.'
   dry_validation:
     errors:
       product:
