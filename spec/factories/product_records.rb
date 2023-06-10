@@ -4,6 +4,6 @@ FactoryBot.define do
     title { 'Product A' }
     price { 99.92 }
     photo { 'https://storage.com.br/img2' }
-    user
+    user { FactoryBot.build(:user_record) }
   end
 end

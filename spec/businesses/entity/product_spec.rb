@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe Entity::Product, type: :entity do
   describe 'Validations by dry-validation' do
-    let(:user) { build(:user) }
+    let(:user) { build(:user_record) }
     let(:product_params) { build(:product_record).attributes.symbolize_keys.except(:id) }
-    let!(:product1) { create(:product_record) }
+    let!(:product1) { create(:product_record, user: user) }
 
     it 'product without name' do
       message = '[Entity::Product.new] :name is missing in Hash input'
@@ -56,9 +56,5 @@ RSpec.describe Entity::Product, type: :entity do
   def valid(params)
     @new_product = Entity::Product.new(params)
     Contract::ProductContract.new.call(@new_product.attributes)
-  end
-
-  def sanitize(data)
-    data.errors.to_h.flatten
   end
 end

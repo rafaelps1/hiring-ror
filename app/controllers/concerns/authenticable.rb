@@ -6,12 +6,12 @@ module Authenticable
     return nil if auth_token.nil?
 
     decoded = JsonWebToken.decode(auth_token)
-    @current_user = User.find_by_id(decoded[:user_id])
+    @current_user = Entity::User.fetch_by(id: decoded[:user_id])
   end
 
   protected
 
   def check_login
-    head :forbidden unless current_user
+    current_user.present?
   end
 end

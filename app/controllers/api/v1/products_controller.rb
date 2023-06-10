@@ -15,7 +15,9 @@ module Api
 
       # POST /products
       def create
-        product = current_user.products.build(product_params)
+        head :forbidden and return unless check_login
+
+        product = current_user&.products_build(product_params)
         if product.save
           render json: product, status: :created
         else

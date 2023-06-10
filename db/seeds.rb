@@ -1,7 +1,7 @@
 ProductRecord.delete_all
-User.delete_all
+UserRecord.delete_all
 
-user = User.create!(email: 'admin@admin.com', password: 'admin')
+user = UserRecord.create!(email: 'admin@admin.com', name: 'admin', password: 'admin')
 puts "Created a new user: #{user.email}"
 
 15.times do

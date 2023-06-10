@@ -10,3 +10,6 @@ en:
         price_negative: 'The price should the positive.'
         price_digit: 'The price should only be two digits of the decimal point.'
         photo_url: 'Photo has not valid url.'
+      user:
+        email_invalid: 'Invalid format email.'
+        is_exist: 'Already exist user with same email.'

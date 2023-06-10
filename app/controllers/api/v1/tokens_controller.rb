@@ -3,8 +3,8 @@ module Api
     class TokensController < ApplicationController
       # POST /tokens
       def create
-        @user = User.find_by_email(user_params[:email])
-        if @user&.authenticate(user_params[:password])
+        @user = Entity::User.fetch_by(email: user_params[:email])
+        if @user.authenticate(user_params[:password])
           @token = JsonWebToken.encode(user_id: @user.id)
           @email = @user.email
           return

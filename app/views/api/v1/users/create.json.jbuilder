@@ -4,6 +4,6 @@ if @errors.blank?
   end
 else
   json.erros @errors do |err|
-    json.message err.full_message
+    json.message err
   end
 end
