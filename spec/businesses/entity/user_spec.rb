@@ -43,6 +43,6 @@ RSpec.describe Entity::User, type: :entity do
 
   def valid(params)
     @new_user = Entity::User.new(params)
-    Contract::UserContract.new.call(@new_user.attributes)
+    Entity::Contract::UserContract.new.call(@new_user.attributes)
   end
 end

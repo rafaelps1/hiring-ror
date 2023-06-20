@@ -1,7 +1,7 @@
 module Api
   module V1
     class UsersController < ApplicationController
-      before_action :set_user, only: %i[destroy show]
+      before_action :call_user_service, only: %i[destroy show]
 
       # GET /users/:id
       def show
@@ -12,10 +12,14 @@ module Api
 
       # POST /users
       def create
-        @user = Entity::User.new(user_params)
-        render status: :created and return if @user.save
+        user_service = UserService.call(user_hash: user_params.to_h)
+        if user_service.valid?
+          user_service.save
+          @user = user_service.result
+          render status: :created and return
+        end
 
-        @errors = @user.errors
+        @errors = user_service.errors
         render status: :unprocessable_entity
       end
 
@@ -24,7 +28,7 @@ module Api
         head :forbidden and return unless check_login
 
         @errors = {}
-        unless @user_record&.destroy
+        unless @user_service.destroy
           @errors = { id: 100, status: 204, message: 'User not found.' }
           render status: :not_found and return
         end
@@ -38,9 +42,9 @@ module Api
         params.require(:user).permit(:name, :email, :password)
       end
 
-      def set_user
-        @user = Entity::User.fetch_by(id: params[:id])
-        @user_record = @user.record if @user.present?
+      def call_user_service
+        @user_service = UserService.call(id: params[:id])
+        @user = @user_service.result
       end
     end
   end

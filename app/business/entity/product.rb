@@ -1,16 +1,5 @@
 module Entity
-  class Product < Dry::Struct
-    transform_keys(&:to_sym)
-    transform_types do |type|
-      if type.default?
-        type.constructor do |value|
-          value.nil? ? Types::Undefined : value
-        end
-      else
-        type
-      end
-    end
-
+  class Product < StructBase
     attribute? :id, Types::Coercible::Integer
     attribute :name, Types::String
     attribute? :title, Types::String.optional

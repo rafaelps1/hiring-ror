@@ -5,7 +5,7 @@ RSpec.describe 'Api::V1::Products', type: :request do
     let!(:user) { create(:user_pwd_bcrypt) }
     let(:product) { build(:product_record) }
     let(:headers) do
-      { Authorization: JsonWebToken.encode(user_id: user.id) }
+      { Authorization: Authenticable::JsonWebToken.encode(user_id: user.id) }
     end
     let(:valids_params) do
       {
@@ -54,7 +54,7 @@ RSpec.describe 'Api::V1::Products', type: :request do
 
       before do
         5.times do
-          create(:product_record, name: Faker::Name.unique.name, user: user)
+          create(:product_record, name: Faker::Name.unique.name.delete('ca').delete('Ca'), user: user)
         end
       end
 
@@ -84,7 +84,7 @@ RSpec.describe 'Api::V1::Products', type: :request do
     let!(:user) { create(:user_pwd_bcrypt) }
     let!(:product) { create(:product_record, user: user) }
     let(:headers) do
-      { Authorization: JsonWebToken.encode(user_id: user.id) }
+      { Authorization: Authenticable::JsonWebToken.encode(user_id: user.id) }
     end
 
     it 'should inactive product' do

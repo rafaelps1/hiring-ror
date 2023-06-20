@@ -3,7 +3,7 @@ if @errors.blank?
     json.email @user.email
   end
 else
-  json.erros @errors do |err|
+  json.errors @errors do |err|
     json.message err
   end
 end

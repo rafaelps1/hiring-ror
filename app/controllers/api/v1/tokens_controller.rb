@@ -2,13 +2,9 @@ module Api
   module V1
     class TokensController < ApplicationController
       # POST /tokens
-      def create
-        @user = Entity::User.fetch_by(email: user_params[:email])
-        if @user.authenticate(user_params[:password])
-          @token = JsonWebToken.encode(user_id: @user.id)
-          @email = @user.email
-          return
-        end
+      def generate
+        token_service = TokenService.call(user_params[:email], user_params[:password])
+        @result = token_service.result and return if token_service.logged?
 
         head :unauthorized
       end

@@ -34,7 +34,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
       post(create_user_path, params: { user: new_user_params })
 
       expect(response).to have_http_status(:created)
-      expect(response.body).to eq("{\"data\":{\"email\":\"email@email.com\"}}")
+      expect(response.body).to eq('{"data":{"email":"email@email.com"}}')
     end
 
     it 'should response with status unprocessable_entity' do
@@ -42,12 +42,12 @@ RSpec.describe 'Api::V1::Users', type: :request do
       post(create_user_path, params: { user: new_user_params })
 
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(response.body).to eq("{\"erros\":[{\"message\":\"[:email] Already exist user with same email.\"}]}")
+      expect(response.body).to eq('{"errors":[{"message":"[:email] Already exist user with same email."}]}')
     end
   end
 
   describe 'DELETE /destroy' do
-    let(:headers) { { Authorization: JsonWebToken.encode(user_id: @user.id) } }
+    let(:headers) { { Authorization: Authenticable::JsonWebToken.encode(user_id: @user.id) } }
     let(:headers_invalid_signature) { { Authorization: JWT.encode({ user_id: @user.id }, 'bad_signature') } }
 
     it 'delete user' do
