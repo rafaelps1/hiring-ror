@@ -65,6 +65,8 @@ RSpec.describe 'Api::V1::Products', type: :request do
         data = @json_resp['data'].to_s
         expect(data).to match('\"name\"=>\"Carro\"')
         expect(data).to match('\"name\"=>\"Alicate\"')
+        page = @json_resp.fetch('links').fetch('rel')
+        expect(page).to eq('current page: 1')
       end
 
       it 'list products on page 2' do
@@ -75,7 +77,8 @@ RSpec.describe 'Api::V1::Products', type: :request do
 
       it 'overflow of pagination' do
         get api_v1_products_url(product), params: { name: 'ca', page: 1000 }
-        expect(json(response)).to include({ 'errors' => 'expected :page in 1..1; got 1000' })
+        error = { 'code' => 121, 'detail' => 'expected :page in 1..1; got 1000', 'title' => nil }
+        expect(json(response)).to include({ 'errors' => [error] })
       end
     end
   end

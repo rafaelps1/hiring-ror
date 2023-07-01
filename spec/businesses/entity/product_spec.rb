@@ -11,50 +11,62 @@ RSpec.describe Entity::Product, type: :entity do
       expect { Entity::Product.new(product_params.except(:name)) }.to raise_error(Dry::Struct::Error, message)
 
       product_params[:name] = ''
-      result = sanitize(valid(product_params))
-      expect(result).to include([I18n.t('dry_validation.errors.product.name_length')])
+      product_service = build_service_product(product_params)
+      error = { code: 121, message: I18n.t('dry_validation.errors.product.name_length'), source: [:name] }
+      expect(product_service.errors).to include(error)
     end
 
     it 'name unique by product' do
       product_params[:name] = product1.name
-      result = sanitize(valid(product_params))
-      expect(result).to include([I18n.t('dry_validation.errors.product.is_exist')])
+      product_service = build_service_product(product_params)
+      error = { code: 121, message: I18n.t('dry_validation.errors.product.is_exist'), source: [:name] }
+      expect(product_service.errors).to include(error)
     end
 
     it 'name large by product' do
       product_params[:name] = Faker::Lorem.characters(number: 101)
-      result = sanitize(valid(product_params))
-      expect(result).to include([I18n.t('dry_validation.errors.product.name_length')])
+      product_service = build_service_product(product_params)
+      error = { code: 121, message: I18n.t('dry_validation.errors.product.name_length'), source: [:name] }
+      expect(product_service.valid?).to be_falsey
+      expect(product_service.errors).to include(error)
     end
 
     it 'price have two digits after decimal point' do
       product_params[:price] = 99.929
-      result = sanitize(valid(product_params))
-      expect(result).to include([I18n.t('dry_validation.errors.product.price_digit')])
+      product_service = build_service_product(product_params)
+      error = { code: 121, message: I18n.t('dry_validation.errors.product.price_digit'), source: [:price] }
+      expect(product_service.valid?).to be_falsey
+      expect(product_service.result).to be(nil)
+      expect(product_service.errors).to include(error)
 
       product_params[:price] = -10.21
-      result = sanitize(valid(product_params))
-      expect(result).to include([I18n.t('dry_validation.errors.product.price_negative')])
+      product_service = build_service_product(product_params)
+      error = { code: 121, message: I18n.t('dry_validation.errors.product.price_negative'), source: [:price] }
+      expect(product_service.valid?).to be_falsey
+      expect(product_service.result).to be(nil)
+      expect(product_service.errors).to include(error)
     end
 
     it 'url form photo invalid' do
       product_params[:photo] = 'url_invalid'
-      result = sanitize(valid(product_params))
-      expect(result).to include([I18n.t('dry_validation.errors.product.photo_url')])
+      product_service = build_service_product(product_params)
+      expect(product_service.valid?).to be_falsey
+      error = { code: 121, source: [:photo], message: I18n.t('dry_validation.errors.product.photo_url') }
+      expect(product_service.errors).to include(error)
     end
 
-    it 'check product state is true by default' do
+    it 'check field state of product is requeired' do
       product_params[:state] = nil
       expect(product_params[:state]).to be(nil)
 
-      result = sanitize(valid(product_params))
-      expect(result.empty?).to be(true)
-      expect(@new_product.state).to be(true)
+      product_service = build_service_product(product_params)
+      expect(product_service.valid?).to be(true)
     end
   end
 
-  def valid(params)
-    @new_product = Entity::Product.new(params)
-    Contract::ProductContract.new.call(@new_product.attributes)
+  def build_service_product(product_params)
+    prod_sv = ProductService.call
+    prod_sv.build_product(product_params)
+    prod_sv
   end
 end

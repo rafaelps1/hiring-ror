@@ -15,7 +15,7 @@ class UserRepository
 
   def fetch_by(options = {})
     return if options[:id].blank? && options[:email].blank?
- 
+
     @record = user_record.find_by(options)
     build_user
   end

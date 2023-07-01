@@ -6,28 +6,29 @@ module Api
       # GET /products
       # GET /products?page=2&name=Ca
       def index
-        @products = repository.index(params) || []
-        @pages = repository.pages
-        @errors = repository.errors
-
-        render json: { errors: @errors.message }, status: :bad_request if @errors.present?
+        product_service = ProductService.new(filter: params)
+        @products = product_service.list
+        @pages = product_service.pages
+        @errors = product_service.errors
+        render status: :bad_request and return if @errors.present?
       end
 
       # POST /products
       def create
         head :forbidden and return unless check_login
 
-        product = current_user&.products_build(product_params)
-        if product.save
-          render json: product, status: :created
-        else
-          render json: { errors: product.errors }, status: :unprocessable_entity
-        end
+        product_service = ProductService.call(product_hash: product_params.to_h)
+        @product = product_service.product_create(current_user.id)
+        render status: :created and return if @product
+
+        @errors = product_service.errors
+        render status: :unprocessable_entity
       end
 
       # PATCH /products/:id
       def inactive
-        render json: {} and return if repository.inactive(params[:id])
+        product_service = ProductService.call(id: params[:id])
+        render json: {} and return if product_service.inactive
 
         render json: { errors: I18n.t('errors.product.already_inactive') }, status: :unprocessable_entity
       end
@@ -36,10 +37,6 @@ module Api
 
       def product_params
         params.require(:product).permit(:name, :title, :price, :photo, :state)
-      end
-
-      def repository
-        @repository ||= ProductRepository.new(model: Entity::Product, record: ProductRecord)
       end
     end
   end

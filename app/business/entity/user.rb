@@ -10,10 +10,5 @@ module Entity
     attribute? :password, Types::String
 
     delegate :authenticate, to: :record
-
-    # add in the product service?
-    def products_build(product_params)
-      record&.products&.build(product_params)
-    end
   end
 end

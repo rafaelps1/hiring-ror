@@ -5,6 +5,7 @@ ruby '3.0.6'
 
 gem 'bcrypt', '~> 3.1.7'
 gem 'bootsnap', require: false
+gem 'dry-monads', '~> 1.6.0'
 gem 'dry-schema', '~> 1.13.1'
 gem 'dry-struct', '~> 1.6.0'
 gem 'dry-types', '~> 1.7.1'

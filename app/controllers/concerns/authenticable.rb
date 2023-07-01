@@ -2,7 +2,7 @@ module Authenticable
   def current_user
     return @current_user if @current_user
 
-    auth_token = request.headers['Authorization']
+    auth_token = fetch_token
     return nil if auth_token.nil?
 
     decoded = JsonWebToken.decode(auth_token)
@@ -13,6 +13,10 @@ module Authenticable
 
   def check_login
     current_user.present?
+  end
+
+  def fetch_token
+    request.headers['Authorization']&.split('Bearer')&.last&.strip
   end
 
   class JsonWebToken
