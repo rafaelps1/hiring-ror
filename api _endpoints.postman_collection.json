@@ -1,0 +1,628 @@
+{
+	"info": {
+		"_postman_id": "89039209-400a-4333-8b2a-2ac29beb05be",
+		"name": "API Endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "536986",
+		"_collection_link": "https://martian-comet-63887.postman.co/workspace/c827a317-2532-40ee-9220-abe322384dd2/collection/536986-89039209-400a-4333-8b2a-2ac29beb05be?action=share&creator=536986&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Generate Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let result = pm.response.json().data.token;",
+							"pm.environment.set(\"token\", result);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"admin@admin.com\",\n    \"password\": \"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/tokens",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"tokens"
+					]
+				},
+				"description": "To take a token of the authentication."
+			},
+			"response": [
+				{
+					"name": "Get Token",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@admin.com\",\n    \"password\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/tokens",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"tokens"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-Download-Options",
+							"value": "noopen"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"1965ec378fbab7eb392452447b5b47d3\""
+						},
+						{
+							"key": "Cache-Control",
+							"value": "max-age=0, private, must-revalidate"
+						},
+						{
+							"key": "X-Request-Id",
+							"value": "1cf1305c-085b-4cb8-a55b-3cb9f13f549c"
+						},
+						{
+							"key": "X-Runtime",
+							"value": "6.528671"
+						},
+						{
+							"key": "Server-Timing",
+							"value": "start_processing.action_controller;dur=0.11, sql.active_record;dur=2.38, instantiation.active_record;dur=0.10, render_template.action_view;dur=0.12, process_action.action_controller;dur=6523.97"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyODMsImV4cCI6MTY4NDA1NzUyMH0.CaaSbJa0PXDgvFbRdo7gAiNowmoPH1J8KZ7ynyowvME\",\n        \"email\": \"admin@admin.com\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Create User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user\": {\n        \"email\": \"rafael123@gmail.com\",\n        \"name\": \"Rafael\",\n        \"password\": \"pwd@123456\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/users",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users"
+					]
+				},
+				"description": "Creates a user according to the data sent."
+			},
+			"response": [
+				{
+					"name": "Create User",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user\": {\n        \"email\": \"rafael123@gmail.com\",\n        \"name\": \"Rafael\",\n        \"password\": \"pwd@123456\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-Download-Options",
+							"value": "noopen"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"ac7c489c46c2017a849c8691f8528127\""
+						},
+						{
+							"key": "Cache-Control",
+							"value": "max-age=0, private, must-revalidate"
+						},
+						{
+							"key": "X-Request-Id",
+							"value": "51472793-1552-492d-9faa-64925dcc020b"
+						},
+						{
+							"key": "X-Runtime",
+							"value": "0.337827"
+						},
+						{
+							"key": "Server-Timing",
+							"value": "sql.active_record;dur=24.12, start_processing.action_controller;dur=0.13, instantiation.active_record;dur=0.01, render_template.action_view;dur=1.16, process_action.action_controller;dur=247.86"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"email\": \"rafael123@gmail.com\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Product",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"product\": {\n        \"name\": \"Smartphone\",\n        \"title\": \"Smart Phone X\",\n        \"price\": 99.92,\n        \"photo\": \"https://storage.com.br/smart.png\"\n    }\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/products",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products"
+					]
+				},
+				"description": "Creates a product according to the data sent."
+			},
+			"response": [
+				{
+					"name": "Create a product",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"product\": {\n        \"name\": \"Smartphone\",\n        \"title\": \"Smart Phone X\",\n        \"price\": 99.92,\n        \"photo\": \"https://storage.com.br/smart.png\",\n        \"state\": false\n    }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"products"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-Download-Options",
+							"value": "noopen"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"68d2980b1b2e5b15651d1b99822790a6\""
+						},
+						{
+							"key": "Cache-Control",
+							"value": "max-age=0, private, must-revalidate"
+						},
+						{
+							"key": "X-Request-Id",
+							"value": "f0fa7003-1c1d-405d-a019-b780d82e02d6"
+						},
+						{
+							"key": "X-Runtime",
+							"value": "0.045320"
+						},
+						{
+							"key": "Server-Timing",
+							"value": "start_processing.action_controller;dur=0.12, sql.active_record;dur=18.38, instantiation.active_record;dur=0.16, render_template.action_view;dur=0.25, process_action.action_controller;dur=41.84"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"id\": 31,\n        \"name\": \"Smartphone\",\n        \"title\": \"Smart Phone X\",\n        \"price\": 99.92,\n        \"photo\": \"https://storage.com.br/smart.png\",\n        \"state\": true\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/products?name=C&page=1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "C"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Show products list."
+			},
+			"response": [
+				{
+					"name": "Products",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/products?name=C&page=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "C"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-Download-Options",
+							"value": "noopen"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"d2165c6dbe8d49ce66a04c8a0bd23e3f\""
+						},
+						{
+							"key": "Cache-Control",
+							"value": "max-age=0, private, must-revalidate"
+						},
+						{
+							"key": "X-Request-Id",
+							"value": "6d1eaf85-acb4-48e8-b26b-33b54223133c"
+						},
+						{
+							"key": "X-Runtime",
+							"value": "0.015491"
+						},
+						{
+							"key": "Server-Timing",
+							"value": "start_processing.action_controller;dur=0.12, sql.active_record;dur=2.67, instantiation.active_record;dur=0.07, render_template.action_view;dur=3.34, process_action.action_controller;dur=9.42"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": [\n        {\n            \"id\": 17,\n            \"name\": \"Margene MacGyver\",\n            \"title\": \"Product A\",\n            \"price\": 99.92,\n            \"photo\": \"https://storage.com.br/img2\",\n            \"state\": true\n        },\n        {\n            \"id\": 18,\n            \"name\": \"Miss Vincenzo Schmitt\",\n            \"title\": \"Product A\",\n            \"price\": 99.92,\n            \"photo\": \"https://storage.com.br/img2\",\n            \"state\": true\n        },\n        {\n            \"id\": 23,\n            \"name\": \"Keely Predovic\",\n            \"title\": \"Product A\",\n            \"price\": 99.92,\n            \"photo\": \"https://storage.com.br/img2\",\n            \"state\": true\n        },\n        {\n            \"id\": 25,\n            \"name\": \"Adan Spencer\",\n            \"title\": \"Product A\",\n            \"price\": 99.92,\n            \"photo\": \"https://storage.com.br/img2\",\n            \"state\": true\n        },\n        {\n            \"id\": 30,\n            \"name\": \"Cortez Corkery\",\n            \"title\": \"Product A\",\n            \"price\": 99.92,\n            \"photo\": \"https://storage.com.br/img2\",\n            \"state\": true\n        }\n    ],\n    \"links\": {\n        \"rel\": \"current page: 1\",\n        \"first\": \"http://localhost:3000/api/v1/products?page=1\",\n        \"last\": \"http://localhost:3000/api/v1/products?page=1\",\n        \"prev\": \"http://localhost:3000/api/v1/products\",\n        \"next\": \"http://localhost:3000/api/v1/products\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Show User",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/users/2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"2"
+					]
+				},
+				"description": "Show a user by ID."
+			},
+			"response": [
+				{
+					"name": "Show",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/users/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"2"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-Download-Options",
+							"value": "noopen"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"730e5c59cdac61419a7573d20347706c\""
+						},
+						{
+							"key": "Cache-Control",
+							"value": "max-age=0, private, must-revalidate"
+						},
+						{
+							"key": "X-Request-Id",
+							"value": "62730686-ae33-4bef-8849-bc5daaaa81da"
+						},
+						{
+							"key": "X-Runtime",
+							"value": "0.085387"
+						},
+						{
+							"key": "Server-Timing",
+							"value": "sql.active_record;dur=13.89, start_processing.action_controller;dur=0.13, instantiation.active_record;dur=6.59, render_template.action_view;dur=0.68, process_action.action_controller;dur=33.11"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"id\": 2,\n        \"name\": \"admin\",\n        \"email\": \"admin@admin.com\"\n    }\n}"
+				}
+			]
+		}
+	]
+}
