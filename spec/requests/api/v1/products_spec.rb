@@ -5,7 +5,7 @@ RSpec.describe 'Api::V1::Products', type: :request do
     let!(:user) { create(:user_pwd_bcrypt) }
     let(:product) { build(:product_record) }
     let(:headers) do
-      { Authorization: Authenticable::JsonWebToken.encode(user_id: user.id) }
+      { Authorization: encode_token(user_id: user.id) }
     end
     let(:valids_params) do
       {
@@ -87,7 +87,7 @@ RSpec.describe 'Api::V1::Products', type: :request do
     let!(:user) { create(:user_pwd_bcrypt) }
     let!(:product) { create(:product_record, user: user) }
     let(:headers) do
-      { Authorization: Authenticable::JsonWebToken.encode(user_id: user.id) }
+      { Authorization: encode_token(user_id: user.id) }
     end
 
     it 'should inactive product' do
@@ -100,5 +100,9 @@ RSpec.describe 'Api::V1::Products', type: :request do
       put(api_v1_product_inactive_url(product))
       expect(response).to have_http_status(:unprocessable_entity)
     end
+  end
+
+  def encode_token(string)
+    Authenticable::JsonWebToken.encode(string)
   end
 end

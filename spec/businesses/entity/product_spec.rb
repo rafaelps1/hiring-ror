@@ -55,7 +55,7 @@ RSpec.describe Entity::Product, type: :entity do
       expect(product_service.errors).to include(error)
     end
 
-    it 'check field state of product is requeired' do
+    it 'check field state is true by default' do
       product_params[:state] = nil
       expect(product_params[:state]).to be(nil)
 

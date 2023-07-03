@@ -1,8 +1,6 @@
 module Api
   module V1
     class ProductsController < ApplicationController
-      before_action :check_login, only: :create
-
       # GET /products
       # GET /products?page=2&name=Ca
       def index

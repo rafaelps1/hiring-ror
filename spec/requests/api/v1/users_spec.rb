@@ -41,8 +41,9 @@ RSpec.describe 'Api::V1::Users', type: :request do
       new_user_params[:email] = @user.email
       post(create_user_path, params: { user: new_user_params })
 
+      error = '{"errors":[{"message":{"code":130,"source":["email"],"message":"Already exist user with same email."}}]}'
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(response.body).to eq('{"errors":[{"message":"[:email] Already exist user with same email."}]}')
+      expect(response.body).to eq(error)
     end
   end
 

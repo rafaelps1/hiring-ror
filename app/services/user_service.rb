@@ -8,6 +8,7 @@ class UserService
   def initialize(id: nil, user_hash: {}, repository_type: :db)
     @id = id
     @user_hash = user_hash
+    @errors = []
     @repository = UserRepository.new if repository_type == :db
   end
 
@@ -19,7 +20,12 @@ class UserService
   end
 
   def errors
-    @errors ||= @contract_errors + @repository&.errors
+    return @errors if @errors.present?
+
+    @contract_errors.each { |err| @errors.push(err) } if @contract_errors.present?
+    repository_errors = @repository&.errors
+    @errors.push(repository_errors) if repository_errors.present?
+    @errors
   end
 
   def fetch_by_id
@@ -32,11 +38,11 @@ class UserService
     errors.empty?
   end
 
-  protected
-
   def build_user(params)
+    return if params.blank?
+
     performed_contract = Entity::Contract::UserContract.new.call(params)
-    @contract_errors = performed_contract.errors.to_a.map { |err| "#{err.path} #{err.text}" }
+    @contract_errors = performed_contract.errors.to_a.map { |err| { code: 130, source: err.path, message: err.text } }
     return if @contract_errors.any?
 
     user = Entity::User.new(params)
