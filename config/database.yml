@@ -21,6 +21,7 @@ test:
   <<: *default
   reconnect: false
   pool: 5
+  database: hiring_ror_test
   socket: /tmp/mysql.sock
 
 production:

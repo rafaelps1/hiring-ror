@@ -36,7 +36,10 @@
 			"extensions": [
 				"misogi.ruby-rubocop",
 				"fnando.ruby",
-				"mhutchie.git-graph"
+				"mhutchie.git-graph",
+				"rebornix.ruby",
+				"castwide.solargraph",
+				"miguel-savignano.ruby-symbols"
 			]
 		}
 	},

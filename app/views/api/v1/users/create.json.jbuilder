@@ -1,9 +1,11 @@
-if @errors.blank?
+if @user.present?
   json.set! :data do
     json.email @user.email
   end
-else
-  json.erros @errors do |err|
-    json.message err.full_message
+end
+
+if @errors&.any?
+  json.errors @errors do |err|
+    json.message err
   end
 end

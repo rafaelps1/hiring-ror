@@ -1,59 +1,40 @@
 module Api
   module V1
     class ProductsController < ApplicationController
-      before_action :set_product, only: %i[update inactive]
-      before_action :check_login, only: :create
-
       # GET /products
+      # GET /products?page=2&name=Ca
       def index
-        # TODO: add this code block on products service.
-        # And add repository in the service too.
-        # So, it improvements design (software) and help code maintainable
-
-        page      = params[:page] || 1
-        term      = params[:term]
-        filtered  = Product.active
-        filtered  = filtered.filter_by_name(term) if term.present?
-
-        @pagy, @products = pagy(filtered.order(:created_at), page: page)
+        product_service = ProductService.new(filter: params)
+        @products = product_service.list
+        @pages = product_service.pages
+        @errors = product_service.errors
+        render status: :bad_request and return if @errors.present?
       end
 
       # POST /products
       def create
-        # TODO: add this code block on products service.
-        # And add repository in the service too.
-        # So, it improvements design (software) and help code maintainable
+        head :forbidden and return unless check_login
 
-        product = current_user.products.build(product_params)
-        if product.save
-          render json: product, status: :created
-        else
-          render json: { errors: product.errors }, status: :unprocessable_entity
-        end
+        product_service = ProductService.call(product_hash: product_params.to_h)
+        @product = product_service.product_create(current_user.id)
+        render status: :created and return if @product
+
+        @errors = product_service.errors
+        render status: :unprocessable_entity
       end
 
       # PATCH /products/:id
       def inactive
-        # TODO: add this code block on products service.
-        # And add repository in the service too.
-        # So, it improvements design (software) and help code maintainable
+        product_service = ProductService.call(id: params[:id])
+        render json: {} and return if product_service.inactive
 
-        if @product.state
-          @product.update(state: false)
-          render json: @product and return
-        end
-
-        render json: { error: 'Product already inactive.' }, status: :unprocessable_entity
+        render json: { errors: I18n.t('errors.product.already_inactive') }, status: :unprocessable_entity
       end
 
       private
 
       def product_params
         params.require(:product).permit(:name, :title, :price, :photo, :state)
-      end
-
-      def set_product
-        @product = Product.find_by_id(params[:id])
       end
     end
   end
