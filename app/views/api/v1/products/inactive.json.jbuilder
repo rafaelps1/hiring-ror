@@ -1,5 +1,5 @@
-json.errors @erros do |error|
+json.errors @errors do |error|
   json.id error[:id]
-  json.title error[:message]
+  json.message error[:message]
   json.status error[:status]
 end

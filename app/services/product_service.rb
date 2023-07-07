@@ -1,5 +1,5 @@
 class ProductService
-  include Dry::Monads[:result, :do]
+  include Dry::Monads[:do, :result, :try]
 
   attr_reader :repository
 
@@ -17,52 +17,59 @@ class ProductService
   end
 
   def create_product
-    cast_fields
-    performed_contract = Entity::Contract::ProductContract.new.call(@product_hash)
-    contract_errors = performed_contract.errors.to_a.map { |err| { code: 121, source: err.path, message: err.text } }
-    return Failure(contract_errors) if contract_errors.any?
-
-    product = Entity::Product.new(@product_hash)
-    save(product)
-    Success(product)
-  end
-
-  def fetch_by_id
-    return Failure(:bad_request) if @id.blank?
-
-    product = repository.fetch_by(id: @id)
-    errors = repository.errors
-    return Failure(errors) if errors.any?
-
-    Success(product)
+    product = yield build_product
+    result = yield save(product)
+    Success(result)
   end
 
   def inactive
-    result = fetch_by_id
-    return Failure(result.failure) if result.failure?
+    product = yield fetch_by(id: @id)
+    result = yield inactive!(product)
 
-    return Success(repository&.update({ state: false })) if result.success.state
-
-    Failure([:unprocessable_entity, result.success])
+    Success(result)
   end
 
   def list
-    pages, products = repository.index(@filter)
-    errors = repository.errors
-    return Failure(errors) if errors.any?
+    products = Try { repository.index(@filter) }
+    return Failure([{ code: 121, message: products.exception.message }]) if products.error?
 
-    Success([products, pages])
+    products.to_result
   end
 
   private
 
-  def cast_fields
-    @product_hash[:price] = Types::Params::Float[@product_hash[:price]]
-    @product_hash[:state] = @product_hash[:state] ? Types::Params::Bool[@product_hash[:state]] : true
+  def build_product
+    @product_hash[:price] = Try { Types::Params::Float[@product_hash[:price]] }.value_or(0)
+    @product_hash[:state] = Try { Types::Params::Bool[@product_hash[:state]] }.value_or(true)
+    errors = valid_fields!
+    return Failure(errors) if errors.any?
+
+    Success(Entity::Product.new(@product_hash))
   end
 
+  def fetch_by(fields = {})
+    Try { repository.fetch_by(fields) }
+  end
+
+  def inactive!(product)
+    return Failure({ id: 10, message: I18n.t('errors.product.already_inactive'), status: 422 }) unless product.state
+
+    Try { repository&.update({ state: false }) }
+  end
+
+  # Persists product on database through repository
+  #
+  # @param [Entity::Product] product
+  # @return Dry::Monads::Result
+  #
+  # @api private
   def save(product)
     repository.product = product
-    try { repository.save(user_id: @user_id) }
+    Try { repository.save(user_id: @user_id) }.to_result
+  end
+
+  def valid_fields!
+    performed_contract = Entity::Contract::ProductContract.new.call(@product_hash)
+    performed_contract.errors.to_a.map { |err| { code: 121, source: err.path, message: err.text } }
   end
 end
