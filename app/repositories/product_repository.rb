@@ -3,7 +3,7 @@ class ProductRepository
   include Pagy::Backend
 
   attr_accessor :product
-  attr_reader :pages, :record, :errors
+  attr_reader :record, :errors
 
   def initialize(product = nil)
     @product = product
@@ -14,17 +14,13 @@ class ProductRepository
     @filtered = filtered.where(state: true)
   end
 
-  def destroy
-    record&.destroy
-  end
-
   def fetch_by(options = {})
     return if options.blank?
 
     @record = filtered.find_by(options)
     return if record.blank?
 
-    entity_product.new(record.attributes)
+    build_product(record.attributes)
   end
 
   def update(product_hash)
@@ -38,9 +34,9 @@ class ProductRepository
     name = filter[:name]
     active
     filter_by_name(name) if name.present?
-    @pages, products = pagy(filtered.order(:created_at), page: page)
+    pages, products = pagy(filtered.order(:created_at), page: page)
 
-    products.map { |prod_record| entity_product.new(prod_record.attributes) }
+    [pages, products.map { |prod_record| build_product(prod_record.attributes) }]
   rescue Pagy::OverflowError => e
     @errors << { code: 121, message: e.message }
     []
@@ -55,13 +51,13 @@ class ProductRepository
 
     attributes = product&.attributes&.merge(options)
     @record = product_record.new(attributes)
-    return entity_product.new(@record.attributes) if record.save
+    return build_product(@record.attributes) if record.save
   end
 
   private
 
-  def entity_product
-    Entity::Product
+  def build_product(fields)
+    Entity::Product.new(fields)
   end
 
   def filtered

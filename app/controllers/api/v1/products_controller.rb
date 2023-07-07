@@ -28,7 +28,7 @@ module Api
         render status: :created
       end
 
-      # PATCH /products/:id
+      # PUT /products/:id
       def inactive
         result = ProductService.new.call(id: params[:id]).inactive
         render status: :ok and return if result.success?

@@ -1,5 +1,5 @@
 class ProductService
-  include Dry::Monads[:result]
+  include Dry::Monads[:result, :do]
 
   attr_reader :repository
 
@@ -47,11 +47,11 @@ class ProductService
   end
 
   def list
-    products = repository.index(@filter)
+    pages, products = repository.index(@filter)
     errors = repository.errors
     return Failure(errors) if errors.any?
 
-    Success([products, repository.pages])
+    Success([products, pages])
   end
 
   private
