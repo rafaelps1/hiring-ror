@@ -10,19 +10,17 @@ module Api
           render status: :bad_request and return
         end
 
-        @products, @pages = products.success
+        @pages, @products = products.success
       end
 
       # POST /products
       def create
         head :forbidden and return unless check_login
 
-        new_product = ProductService.new.call(product_hash: product_params.to_h,
-                                              user_id: current_user.id).create_product
-        if new_product.failure?
-          @errors = new_product.failure
-          render status: :unprocessable_entity and return
-        end
+        product_service = ProductService.new.call(product_hash: product_params.to_h, user_id: current_user.id)
+        new_product = product_service.create_product
+        @errors = [new_product.failure]
+        render status: :unprocessable_entity and return if new_product.failure?
 
         @product = new_product.success
         render status: :created
@@ -33,7 +31,7 @@ module Api
         result = ProductService.new.call(id: params[:id]).inactive
         render status: :ok and return if result.success?
 
-        @errors = [{ id: 10, title: I18n.t('errors.product.already_inactive'), status: 422 }]
+        @errors = [result.failure]
         render status: :unprocessable_entity and return if result.failure?
       end
 
