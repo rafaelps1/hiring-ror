@@ -7,6 +7,7 @@ class ProductRepository
 
   def initialize(product = nil)
     @product = product
+    @errors = []
   end
 
   def active
@@ -41,8 +42,8 @@ class ProductRepository
 
     products.map { |prod_record| entity_product.new(prod_record.attributes) }
   rescue Pagy::OverflowError => e
-    @errors = { code: 121, message: e.message }
-    nil
+    @errors << { code: 121, message: e.message }
+    []
   end
 
   def filter_by_name(term)
@@ -54,9 +55,7 @@ class ProductRepository
 
     attributes = product&.attributes&.merge(options)
     @record = product_record.new(attributes)
-    return entity_product.new(record.attributes) if record.save!
-  rescue ActiveRecord::ActiveRecordError => e
-    @errors = { code: 101, message: e.message }
+    return entity_product.new(@record.attributes) if record.save
   end
 
   private

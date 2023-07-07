@@ -1,81 +1,68 @@
 class ProductService
-  prepend Command
+  include Dry::Monads[:result]
 
-  attr_accessor :id
   attr_reader :repository
 
-  delegate :destroy, :pages, :save, to: :repository
+  def initialize(repository: ProductRepository)
+    @repository = repository.new
+  end
 
-  def initialize(id: nil, filter: {}, product_hash: {}, repository_type: :db)
+  def call(id: nil, filter: {}, product_hash: {}, user_id: nil)
     @id = id
     @filter = filter
+    @user_id = user_id
     @product_hash = product_hash
-    @errors = []
-    @repository = ProductRepository.new if repository_type == :db
+
+    self
   end
 
-  def call
-    return              if @id.blank? && @product_hash.blank? && @filter.blank?
-    return list         if @filter.present?
-    return fetch_by_id  if @id.present?
-    return              unless @product_hash.present?
+  def create_product
+    cast_fields
+    performed_contract = Entity::Contract::ProductContract.new.call(@product_hash)
+    contract_errors = performed_contract.errors.to_a.map { |err| { code: 121, source: err.path, message: err.text } }
+    return Failure(contract_errors) if contract_errors.any?
 
-    build_product(@product_hash)
-  end
-
-  def errors
-    return @errors if @errors.present?
-
-    @errors.push(@coercion_errors) if @coercion_errors.present?
-    @contract_errors.each { |err| @errors.push(err) } if @contract_errors.present?
-    repository_errors = @repository&.errors
-    @errors.push(repository_errors) if repository_errors.present?
-    @errors
+    product = Entity::Product.new(@product_hash)
+    save(product)
+    Success(product)
   end
 
   def fetch_by_id
-    return if @id.blank?
+    return Failure(:bad_request) if @id.blank?
 
-    repository&.fetch_by(id: @id)
+    product = repository.fetch_by(id: @id)
+    errors = repository.errors
+    return Failure(errors) if errors.any?
+
+    Success(product)
   end
 
   def inactive
-    return repository&.update({ state: false }) if repository&.record&.state
+    result = fetch_by_id
+    return Failure(result.failure) if result.failure?
+
+    return Success(repository&.update({ state: false })) if result.success.state
+
+    Failure([:unprocessable_entity, result.success])
   end
 
   def list
-    repository.index(@filter) || []
-  end
+    products = repository.index(@filter)
+    errors = repository.errors
+    return Failure(errors) if errors.any?
 
-  def product_create(user_id)
-    return repository.save(user_id: user_id) if valid?
-  end
-
-  def valid?
-    errors.empty?
-  end
-
-  def build_product(params)
-    casted_params = cast_params(params)
-    return if casted_params.blank?
-
-    performed_contract = Entity::Contract::ProductContract.new.call(casted_params)
-    @contract_errors = performed_contract.errors.to_a.map { |err| { code: 121, source: err.path, message: err.text } }
-    return unless valid?
-
-    product = Entity::Product.new(casted_params)
-    repository.product = product
-    product
+    Success([products, repository.pages])
   end
 
   private
 
-  def cast_params(params)
-    params[:price] = Types::Params::Float[params[:price]]
-    params[:state] = params[:state] ? Types::Params::Bool[params[:state]] : true
-    params
-  rescue Dry::Types::CoercionError => e
-    @coercion_errors = { code: 120, message: e.message.strip.capitalize }
-    nil
+  def cast_fields
+    @product_hash[:price] = Types::Params::Float[@product_hash[:price]]
+    @product_hash[:state] = @product_hash[:state] ? Types::Params::Bool[@product_hash[:state]] : true
+  end
+
+  def save(product)
+    repository.product = product
+    try { repository.save(user_id: @user_id) }
   end
 end

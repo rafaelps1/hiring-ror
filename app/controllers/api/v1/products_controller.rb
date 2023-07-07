@@ -4,31 +4,37 @@ module Api
       # GET /products
       # GET /products?page=2&name=Ca
       def index
-        product_service = ProductService.new(filter: params)
-        @products = product_service.list
-        @pages = product_service.pages
-        @errors = product_service.errors
-        render status: :bad_request and return if @errors.present?
+        products = ProductService.new.call(filter: params).list
+        if products.failure?
+          @errors = products.failure
+          render status: :bad_request and return
+        end
+
+        @products, @pages = products.success
       end
 
       # POST /products
       def create
         head :forbidden and return unless check_login
 
-        product_service = ProductService.call(product_hash: product_params.to_h)
-        @product = product_service.product_create(current_user.id)
-        render status: :created and return if @product
+        new_product = ProductService.new.call(product_hash: product_params.to_h,
+                                              user_id: current_user.id).create_product
+        if new_product.failure?
+          @errors = new_product.failure
+          render status: :unprocessable_entity and return
+        end
 
-        @errors = product_service.errors
-        render status: :unprocessable_entity
+        @product = new_product.success
+        render status: :created
       end
 
       # PATCH /products/:id
       def inactive
-        product_service = ProductService.call(id: params[:id])
-        render json: {} and return if product_service.inactive
+        result = ProductService.new.call(id: params[:id]).inactive
+        render status: :ok and return if result.success?
 
-        render json: { errors: I18n.t('errors.product.already_inactive') }, status: :unprocessable_entity
+        @errors = [{ id: 10, title: I18n.t('errors.product.already_inactive'), status: 422 }]
+        render status: :unprocessable_entity and return if result.failure?
       end
 
       private

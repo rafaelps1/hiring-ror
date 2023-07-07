@@ -1,7 +1,6 @@
 module Entity
   class User < StructBase
     attr_accessor :record
-    attr_reader :errors
 
     attribute? :id, Types::Coercible::Integer
     attribute :name, Types::Coercible::String
