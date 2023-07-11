@@ -20,6 +20,7 @@ Patterns
 
 Libraries
 * **Brakeman**: static analysis tool which checks applications for security vulnerabilities.
+* **Dry-monads**: use to handle errors and exceptions, so that the code is much more understandable and has all the error handling, without all the _if_ s and _else_ s.
 * **Dry-validation**: use schemas and powerful rules to validate data with explicitness, clarity and precision
 * **Dry-types**: build your own data types, constraints and coercions with dry-types
 * **Dry-struct**: define your own data structs using typed attributes powered by dry-types.
