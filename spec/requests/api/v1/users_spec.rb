@@ -21,7 +21,9 @@ RSpec.describe 'Api::V1::Users', type: :request do
 
     it 'not found user' do
       get user_not_found_show_path
+
       expect(response).to have_http_status(:not_found)
+      expect(response.body).to eq('{"errors":[{"id":100,"title":"Not found","status":204}]}')
     end
   end
 
@@ -41,7 +43,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
       new_user_params[:email] = @user.email
       post(create_user_path, params: { user: new_user_params })
 
-      error = '{"errors":[{"message":{"code":130,"source":["email"],"message":"Already exist user with same email."}}]}'
+      error = '{"errors":[{"id":130,"title":"Already exist user with same email."}]}'
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.body).to eq(error)
     end

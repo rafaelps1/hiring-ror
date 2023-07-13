@@ -24,7 +24,13 @@ RSpec.describe 'Api::V1::Products', type: :request do
       expect(response).to have_http_status(:created)
     end
 
-    it 'should forbidden create product' do
+    it 'should unprocessable entity' do
+      post(api_v1_products_url, params: valids_params, headers: headers)
+      post(api_v1_products_url, params: valids_params, headers: headers)
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it 'should forbidden' do
       post(api_v1_products_url, params: valids_params)
       expect(response).to have_http_status(:forbidden)
     end
@@ -98,11 +104,17 @@ RSpec.describe 'Api::V1::Products', type: :request do
     it 'should not inactive product' do
       product.update(state: false)
       put(api_v1_product_inactive_url(product))
+
       expect(response).to have_http_status(:unprocessable_entity)
+      expect(fetch_errors(response)).to eq({ id: 10, title: 'Already inactive product.', status: 422 })
     end
   end
 
   def encode_token(string)
     Authenticable::JsonWebToken.encode(string)
+  end
+
+  def fetch_errors(response)
+    json(response).fetch('errors').first.symbolize_keys
   end
 end

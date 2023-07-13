@@ -19,6 +19,14 @@ RSpec.describe 'Api::V1::Tokens', type: :request do
         }
       }
     end
+    let(:user_not_found_params) do
+      {
+        token: {
+          email: 'foo@foo.com.',
+          password: '12356'
+        }
+      }
+    end
 
     context 'JWT tokens' do
       it 'should get token' do
@@ -32,8 +40,13 @@ RSpec.describe 'Api::V1::Tokens', type: :request do
         expect(data.fetch('email')).to eq(user.email)
       end
 
-      it 'should not get token' do
+      it 'should not get token by password invalid' do
         post api_v1_generate_url, params: user_unauth_params
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'should not get token by user not found' do
+        post api_v1_generate_url, params: user_not_found_params
         expect(response).to have_http_status(:unauthorized)
       end
     end

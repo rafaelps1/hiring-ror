@@ -1,4 +1,4 @@
-if @errors.any?
+if @errors&.any?
   json.errors @errors do |error|
     json.code error[:code]
     json.detail error[:message]
@@ -6,7 +6,7 @@ if @errors.any?
   end
 end
 
-if @products.any?
+if @products&.any?
   json.data @products do |product|
     json.id product.id
     json.name product.name
