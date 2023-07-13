@@ -3,8 +3,8 @@ module Api
     class TokensController < ApplicationController
       # POST /tokens
       def generate
-        token_service = LoginTokenService.call(user_params[:email], user_params[:password])
-        @result = token_service.result and return if token_service.logged?
+        login = LoginTokenService.call(email: user_params[:email], password: user_params[:password]).result
+        @login = login.success and return if login.success?
 
         head :unauthorized
       end
