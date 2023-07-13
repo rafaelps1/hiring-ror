@@ -12,13 +12,12 @@ In the future, we will apply DDD principles along with Clear Architecture to gai
 Design Patterns and Libraries Used
 ===
 
-Patterns
-* **Factory Method**: provides an interface for creating objects in a superclass, but allows subclasses to alter the type of objects that will be created
-* **Command**: performs some specific task without having any information about the receiver of the request
 * **Repository**: it mediates between the domain and data mapping layers, acting like an in-memory domain object collection
 * **Service Object**: performs a single action, in that it encapsulates a process of the domain or business logic. Usually, Service doesn't have any logic of its own.
+* **Command**: performs some specific task without having any information about the receiver of the request (see LoginTokenService)
+* **Factory Method**: provides an interface for creating objects in a superclass, but allows subclasses to alter the type of objects that will be created (see Command::Sender#call)
 
-Libraries
+
 * **Brakeman**: static analysis tool which checks applications for security vulnerabilities.
 * **Dry-monads**: use to handle errors and exceptions, so that the code is much more understandable and has all the error handling, without all the _if_ s and _else_ s.
 * **Dry-validation**: use schemas and powerful rules to validate data with explicitness, clarity and precision
