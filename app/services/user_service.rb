@@ -1,52 +1,62 @@
 class UserService
-  prepend Command
+  include Dry::Monads[:do, :result, :try]
 
   attr_reader :repository
 
-  delegate :destroy, :save, to: :repository
+  def initialize(repository: UserRepository)
+    @repository = repository.new
+  end
 
-  def initialize(id: nil, user_hash: {}, repository_type: :db)
+  def call(id: nil, user_hash: {})
     @id = id
     @user_hash = user_hash
-    @errors = []
-    @repository = UserRepository.new if repository_type == :db
+    self
   end
 
-  def call
-    return                        if @id.blank? && @user_hash.blank?
-    return build_user(@user_hash) if @user_hash.present?
-
-    fetch_by_id if @id.present?
+  def create_user
+    user_new = yield build_user
+    result = yield save(user_new)
+    Success(result)
   end
 
-  def errors
-    return @errors if @errors.present?
+  def destroy
+    user = yield fetch_by(id: @id)
+    result = yield destroy_record
 
-    @contract_errors.each { |err| @errors.push(err) } if @contract_errors.present?
-    repository_errors = @repository&.errors
-    @errors.push(repository_errors) if repository_errors.present?
-    @errors
+    Success(result)
   end
 
-  def fetch_by_id
-    return if @id.blank?
-
-    repository&.fetch_by(id: @id)
+  def show_user
+    fetch_by(id: @id)
   end
 
-  def valid?
-    errors.empty?
+  private
+
+  def build_user
+    errors = valid_fields!
+    return Failure(errors) if errors.any?
+
+    Success(Entity::User.new(@user_hash))
   end
 
-  def build_user(params)
-    return if params.blank?
+  def destroy_record
+    Try { repository.destroy }.to_result
+  end
 
-    performed_contract = Entity::Contract::UserContract.new.call(params)
-    @contract_errors = performed_contract.errors.to_a.map { |err| { code: 130, source: err.path, message: err.text } }
-    return if @contract_errors.any?
+  def fetch_by(fields = {})
+    user = Try { repository&.fetch_by(fields) }.to_result
+    return Failure({ id: 100, status: 204, title: 'Not found' }) unless user.success
 
-    user = Entity::User.new(params)
-    repository.user = user
     user
+  end
+
+  def save(user)
+    repository.user = user
+    Try { repository.save }.to_result
+  end
+
+  def valid_fields!
+    performed_contract = Entity::Contract::UserContract.new.call(@user_hash)
+    performed_contract.errors.to_a.map { |err| { id: 130, source: err.path, title: err.text } }
   end
 end

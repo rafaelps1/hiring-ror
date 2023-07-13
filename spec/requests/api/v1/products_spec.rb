@@ -106,7 +106,7 @@ RSpec.describe 'Api::V1::Products', type: :request do
       put(api_v1_product_inactive_url(product))
 
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(fetch_errors(response)).to eq({ id: 10, message: 'Already inactive product.', status: 422 })
+      expect(fetch_errors(response)).to eq({ id: 10, title: 'Already inactive product.', status: 422 })
     end
   end
 

@@ -2,48 +2,38 @@ class UserRepository
   include Repository
 
   attr_accessor :user
-  attr_reader :record, :errors
+  attr_reader :record
 
-  def initialize(user = nil)
+  def initialize(user = nil, user_record = UserRecord)
     @user = user
-    @errors = []
+    @user_record = user_record
   end
 
   def destroy
-    record&.destroy
+    record&.destroy!
   end
 
   def fetch_by(options = {})
-    return if options[:id].blank? && options[:email].blank?
+    @record = @user_record.find_by(options)
+    return if record.blank?
 
-    @record = user_record.find_by(options)
-    build_user
+    build_user(record.attributes)
   end
 
   def save
     return if user.blank?
 
-    @record = user_record.new(user&.attributes)
-    if record.save!
-      user.record = record
-      user
-    end
-  rescue ActiveRecord::ActiveRecordError => e
-    @errors = { code: 100, message: e.message }
+    @record = @user_record.new(user&.attributes)
+    return build_user(record.attributes) if record.save!
   end
 
   private
 
-  def build_user
-    return if record.blank?
+  def build_user(fields = {})
+    return if fields.blank?
 
-    attrs = record&.attributes
-    @user = Entity::User.new(attrs)
+    @user = Entity::User.new(fields)
     user.record = record
     user
-  end
-
-  def user_record
-    UserRecord
   end
 end

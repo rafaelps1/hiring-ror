@@ -48,13 +48,13 @@ class ProductService
   end
 
   def fetch_by(fields = {})
-    Try { repository.fetch_by(fields) }
+    Try { repository.fetch_by(fields) }.to_result
   end
 
   def inactive!(product)
     return Failure({ id: 10, message: I18n.t('errors.product.already_inactive'), status: 422 }) unless product.state
 
-    Try { repository&.update({ state: false }) }
+    Try { repository&.update({ state: false }) }.to_result
   end
 
   # Persists product on database through repository

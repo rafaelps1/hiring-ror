@@ -53,7 +53,8 @@ class ProductRepository
   private
 
   def build_product(fields)
-    Entity::Product.new(fields)
+    @product = Entity::Product.new(fields)
+    product
   end
 
   def filtered

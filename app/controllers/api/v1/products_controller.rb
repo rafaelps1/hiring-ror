@@ -17,13 +17,10 @@ module Api
       def create
         head :forbidden and return unless check_login
 
-        new_product = ProductService.new.call(product_hash: product_params.to_h,
-                                              user_id: current_user.id).create_product
-
-        if new_product.failure?
-          @errors = [new_product.failure]
-          render status: :unprocessable_entity and return
-        end
+        product_service = ProductService.new.call(product_hash: product_params.to_h, user_id: current_user.id)
+        new_product = product_service.create_product
+        @errors = [new_product.failure]
+        render status: :unprocessable_entity and return if new_product.failure?
 
         @product = new_product.success
         render status: :created
