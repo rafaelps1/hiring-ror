@@ -1,4 +1,4 @@
-if @errors&.any?
+if @errors
   json.errors @errors do |error|
     json.message error
   end
